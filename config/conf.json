@@ -1,0 +1,7 @@
+{
+  "title":"先河网盘",
+  "app_name" :"arsDrive",
+  "httpserver":":80",
+  "ipfs_gateway":"192.168.2.56:8080",
+  "ipfs_api":"192.168.2.56:5001"
+ }
