@@ -1,0 +1,46 @@
+<html style="background-attachment: fixed;"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <link href="./static/images/common/ico.png" rel="icon" type="image/x-icon">
+    <link href="./static/style/common.css" rel="stylesheet">
+    <link href="./static/style/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <!--[if IE 7]>
+    <link rel="stylesheet" href="./static/style/font-awesome/css/font-awesome-ie7.css">
+    <![endif]--> 
+    <title>先河网盘</title>
+    <link href="./static/style/wap/app_explorer.css" rel="stylesheet">
+    <script type="text/javascript" src="./static/js/lib/jquery.min.js"></script>
+    <script type="text/javascript" src="./static/js/app/wapipfsdisk.js"></script>    
+    <style type="text/css">
+        #confirm,#cancel {
+            color: #2196F3;
+            margin-left: 1.2rem;
+        }
+        #confirm:hover,#cancel:hover {
+            color: #fff;
+        }
+    </style>
+    <body class="wap-page support-space-not">
+	<div class="frame-main">
+            <div class="address" style="display:flex">
+                        <ul id="yarnball" style="width:90%"></ul>
+                        <span id="logout_btn" style="width:10%;margin: 0.3em 0.5em">注销</span>
+                </div>
+                
+        
+            <div class="bodymain">			
+                <div class="file-list-list"></div>
+            </div>
+	</div>
+	<div class="toolbar-menu">
+		<button class="menu-plus tool" id="openmenu" data-toggle="dropdown"></button>
+		<ul class="dropdown-menu tool-menu-right pull-right animated menuShow" role="menu">
+        <li data-action="upload"><a draggable="false"><i class="font-icon icon-cloud-upload"></i>上传</a></li>
+        <li data-action="newfolder"><a draggable="false"><i class="font-icon icon-folder-close-alt"></i>新建文件夹</a></li>
+        <li data-action="paste" id="btn-paste" class="hide"><a draggable="false"><i class="font-icon icon-paste"></i>粘贴</a></li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<meta name="renderer" content="webkit">
+	<link href="./static/images/common/ico.png" rel="icon" type="image/x-icon">
+	<link href="./static/style/common.css" rel="stylesheet"/>
+	<link href="./static/style/font-awesome/css/font-awesome.css" rel="stylesheet">
+        <title>{{index . "title"}}</title>
+	<link href="./static/style/login.css" rel="stylesheet">
+        <script type="text/javascript" src="./static/js/lib/jquery.min.js"></script>
+</head>
+
+<body>
+    <style type='text/css'>.aero:before,.aero:after,.background{background-color:#bbb;background-image:url('./static/images/common/wall_page.jpg');}</style>
+	<div class="background"></div>
+	<div class="loginbox animated-500 fadeInDown aero" >
+            <div class="title">
+                    <div class="logo"><i class="icon-cloud"></i>{{index . "app_name"}}</div>
+            </div>
+            <div class="form">
+                <div class="inputs">
+                    <div>
+                        <i class="font-icon icon-user"></i>
+                        <input id="username" type="text" placeholder="登录账号" required autocomplete="on" />
+                    </div>
+                </div>
+                <div class="actions">
+                    <br/>
+                    <input type="submit" id="submit" value="登录" />
+                </div>
+                <div class="msg"></div>
+            </div>
+	</div>
+        <script>
+            $("#submit").on("click",null,function(){
+                var user = $("#username").val();
+                if(user === null)return;
+                $.ajax({
+                    type: 'post',
+                    url:'./api/login',
+                    dataType: 'json',
+                    data:{user:user},
+                    success: function(result) {
+                        if(result.success >= 0){
+                            location.reload();
+                        }else{
+                            $(".msg").html("登录失败");
+                        }
+                    }
+                }); 
+            });
+        </script>
+</body>
