@@ -34,7 +34,7 @@ func (self *UserRoot)SetRoot(root string)(error){
 	}
 }
 
-func Init(uid string) (u *UserRoot){
+func GetUserRootModel(uid string) (u *UserRoot){
 	u = new(UserRoot)
 	u.root_file = "./cache/"+uid+".txt"
 	_, err := os.Stat("./cache")

@@ -1293,7 +1293,7 @@ html,body {
 }
 .tools .font-icon {
 	line-height:16px;
-	padding:0 2px;
+	padding: 0 4px 0 3px;
 	font-size:1em;
 }
 .frame-main .frame-right .frame-right-main .drop-menu-action {

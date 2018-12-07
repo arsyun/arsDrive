@@ -7,7 +7,7 @@ import (
 )
 
 type IpfsModel struct {
-	root string
+	ApiModel Api
 }
 type FileInfo struct {
 	Name string `json:"Name"`
@@ -35,18 +35,16 @@ type resData struct {
 	Message string `json:"Message"`
 }
 
-func GetIpfs(root string)(*IpfsModel){
-	model := new(IpfsModel)
-	model.root = root+"/"
+func GetIpfsModel(apihost string)(IpfsModel){
+	model := IpfsModel{Api{apihost}}
 	return model
 }
 
-func (self *IpfsModel) GetPathList(path string) ([]FileInfo,error){
+func (self *IpfsModel) GetPathList(root string,path string) ([]FileInfo,error){
 	if strings.HasPrefix(path,"/"){
 		path = path[1:]
 	}
-	api  := new(Api)
-	res := api.ObjectGet(self.root+path)
+	res := self.ApiModel.ObjectGet(root+"/"+path)
 	p := &ipld{}
 	err := json.Unmarshal(res, p)
 	if p.Type != ""{
@@ -55,12 +53,11 @@ func (self *IpfsModel) GetPathList(path string) ([]FileInfo,error){
 	return p.Links,err
 }
 
-func (self *IpfsModel)RmFiles(filesjson string)(string,error){
+func (self *IpfsModel)RmFiles(root string,filesjson string)(string,error){
 	f := &deleData{}
 	json.Unmarshal([]byte(filesjson),f)
-	api := new(Api)
 	for i:=0;i< len(f.Files);i++{
-		res := api.ObjectRm(self.root,f.Path+f.Files[i])
+		res := self.ApiModel.ObjectRm(root,f.Path+f.Files[i])
 		p:= &resData{}
 		json.Unmarshal(res, p)
 		if p.Type != ""{
@@ -69,14 +66,13 @@ func (self *IpfsModel)RmFiles(filesjson string)(string,error){
 		if p.Hash == ""{
 			return "", errors.New(string(res))
 		}
-		self.root = p.Hash
+		root = p.Hash
 	}
-	return self.root, nil
+	return root, nil
 }
 
-func (self *IpfsModel)AddFile(path string,hash string)(string,error){
-	api := new(Api)
-	res := api.ObjectAdd(self.root,path,hash)
+func (self *IpfsModel)AddFile(root string,path string,hash string)(string,error){
+	res := self.ApiModel.ObjectAdd(root,path,hash)
 	p:= &resData{}
 	json.Unmarshal(res, p)
 	if p.Type != ""{
@@ -85,44 +81,42 @@ func (self *IpfsModel)AddFile(path string,hash string)(string,error){
 	return p.Hash, nil
 }
 
-func (self *IpfsModel)AddFiles(path string,filesjson string)(string,error){
+func (self *IpfsModel)AddFiles(root string,path string,filesjson string)(string,error){
 	f := &sendData{}
 	json.Unmarshal([]byte(filesjson),f)
-	api := new(Api)
 	for i:=0;i < len(f.Files);i++{
-		res := api.ObjectAdd(self.root, path+f.Files[i].Name,f.Files[i].Hash)
+		res := self.ApiModel.ObjectAdd(root, path+f.Files[i].Name,f.Files[i].Hash)
 		p:= &resData{}
 		json.Unmarshal(res, p)
 		if p.Type != ""{
 			return "", errors.New(p.Message)
 		}
-		self.root = p.Hash
+		root = p.Hash
 	}
-	return self.root, nil
+	return root, nil
 }
 
-func (self *IpfsModel)MoveFiles(path string,filesjson string)(string,error){
+func (self *IpfsModel)MoveFiles(root string,path string,filesjson string)(string,error){
 	f := &sendData{}
 	json.Unmarshal([]byte(filesjson),f)
-	api := new(Api)
 	oldPath := f.Path
 	for i:=0;i < len(f.Files);i++{
-		res := api.ObjectRm(self.root,oldPath+f.Files[i].Name)
+		res := self.ApiModel.ObjectRm(root,oldPath+f.Files[i].Name)
 		p:= &resData{}
 		json.Unmarshal(res, p)
 		if p.Type != ""{
 			return "", errors.New(p.Message)
 		}
-		self.root = p.Hash
+		root = p.Hash
 	}
 	for i:=0;i < len(f.Files);i++{
-		res := api.ObjectAdd(self.root, path+f.Files[i].Name,f.Files[i].Hash)
+		res := self.ApiModel.ObjectAdd(root, path+f.Files[i].Name,f.Files[i].Hash)
 		p:= &resData{}
 		json.Unmarshal(res, p)
 		if p.Type != ""{
 			return "", errors.New(p.Message)
 		}
-		self.root = p.Hash
+		root = p.Hash
 	}
-	return self.root, nil
+	return root, nil
 }

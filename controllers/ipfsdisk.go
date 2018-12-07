@@ -38,6 +38,7 @@ type configuration struct {
 }
 
 var Setting configuration
+var ipfsModel models.IpfsModel
 
 func init(){
 	file, _ := os.Open("./config/conf.json")
@@ -51,6 +52,7 @@ func init(){
 		Setting.Ipfs_api = "127.0.0.1:5001"
 		Setting.Ipfs_gateway = "127.0.0.1:8080"
 	}
+	ipfsModel = models.GetIpfsModel("http://"+Setting.Ipfs_api)
 }
 
 
@@ -63,7 +65,6 @@ func Index(c echo.Context) error{
 	if uid == ""{
 		return c.Render(http.StatusOK, "login.html",index_data)
 	}
-
 	userAgent := c.Request().Header.Get("User-Agent")
 	reg := regexp.MustCompile(`(?i:mobile|android|iphone|ipad)`)
 	res := reg.FindString(userAgent)
@@ -108,12 +109,12 @@ func GetFileList(c echo.Context) (err error){
 		return errorReturn(c,"user_id is NULL")
 	}
 	path := c.FormValue("path")
-	userRoot := models.Init(uid)
+	userRoot := models.GetUserRootModel(uid)
 	root, err := userRoot.GetRoot()
 	if err != nil{
 		return errorReturn(c,"Get Root_Hash ERROR")
 	}
-	files ,err := models.GetIpfs(root).GetPathList(path)
+	files ,err := ipfsModel.GetPathList(root,path)
 	if err != nil{
 		return errorReturn(c,"Wrong Path")
 	}
@@ -129,13 +130,12 @@ func RemoveFiles(c echo.Context) (err error){
 		return errorReturn(c,"user_id is NULL")
 	}
 	files := c.FormValue("files")
-	userRoot := models.Init(uid)
+	userRoot := models.GetUserRootModel(uid)
 	root, err := userRoot.GetRoot()
 	if err != nil{
 		return errorReturn(c,"Get Root_Hash ERROR")
 	}
-	ipfsModel := models.GetIpfs(root)
-	hash ,err2 := ipfsModel.RmFiles(files)
+	hash ,err2 := ipfsModel.RmFiles(root,files)
 	if err2 != nil{
 		return errorReturn(c,"Wrong Path")
 	}
@@ -154,13 +154,12 @@ func AddFile(c echo.Context )(err error){
 	path := c.FormValue("path")
 	name := c.FormValue("name")
 	hash := c.FormValue("hash")
-	userRoot := models.Init(uid)
+	userRoot := models.GetUserRootModel(uid)
 	root, err := userRoot.GetRoot()
 	if err != nil{
 		return errorReturn(c,"Get Root_Hash ERROR")
 	}
-	ipfsModel := models.GetIpfs(root)
-	hash ,err2 := ipfsModel.AddFile(path+name,hash)
+	hash ,err2 := ipfsModel.AddFile(root,path+name,hash)
 	if err2 != nil{
 		return errorReturn(c,"Wro2ng Path")
 	}
@@ -176,7 +175,7 @@ func GetUserRoot(c echo.Context )(err error){
 	if uid == ""{
 		return errorReturn(c,"user_id is NULL")
 	}
-	userRoot := models.Init(uid)
+	userRoot := models.GetUserRootModel(uid)
 	root, err := userRoot.GetRoot()
 	if err != nil{
 		return errorReturn(c,"Get Root_Hash ERROR")
@@ -192,15 +191,14 @@ func NewFolder(c echo.Context )(err error){
 	if uid == ""{
 		return errorReturn(c,"user_id is NULL")
 	}
-	userRoot := models.Init(uid)
+	userRoot := models.GetUserRootModel(uid)
 	root, err := userRoot.GetRoot()
 	if err != nil{
 		return errorReturn(c,"Get Root_Hash ERROR")
 	}
 	path := c.FormValue("path")
 	name := c.FormValue("name")
-	ipfsModel := models.GetIpfs(root)
-	hash ,err2 := ipfsModel.AddFile(path+name,"QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn")
+	hash ,err2 := ipfsModel.AddFile(root,path+name,"QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn")
 	if err2 != nil{
 		return errorReturn(c,"Wrong Path")
 
@@ -218,15 +216,14 @@ func CopyFiles(c echo.Context )(err error){
 		c.FormValue("user_id is NULL")
 		return
 	}
-	userRoot := models.Init(uid)
+	userRoot := models.GetUserRootModel(uid)
 	root, err := userRoot.GetRoot()
 	if err != nil{
 		return errorReturn(c,"Get Root_Hash ERROR")
 	}
 	path := c.FormValue("path")
 	data := c.FormValue("data")
-	ipfsModel := models.GetIpfs(root)
-	hash ,err2 := ipfsModel.AddFiles(path,data)
+	hash ,err2 := ipfsModel.AddFiles(root,path,data)
 	if err2 != nil{
 		return errorReturn(c,"Wrong Path")
 	}
@@ -242,15 +239,14 @@ func MoveFiles(c echo.Context )(err error){
 	if uid == ""{
 		return errorReturn(c,"user_id is NULL")
 	}
-	userRoot := models.Init(uid)
+	userRoot := models.GetUserRootModel(uid)
 	root, err := userRoot.GetRoot()
 	if err != nil{
 		return errorReturn(c,"Get Root_Hash ERROR")
 	}
 	path := c.FormValue("path")
 	data := c.FormValue("data")
-	ipfsModel := models.GetIpfs(root)
-	hash ,err2 := ipfsModel.MoveFiles(path,data)
+	hash ,err2 := ipfsModel.MoveFiles(root,path,data)
 	if err2 != nil{
 		return errorReturn(c,"Wrong Path")
 	}

@@ -1,18 +1,20 @@
 # arsDrive
 
-先河网盘
+先河网盘-----arsDrive
 
-基于IPFS的应用先河私有云扩展应用
+An Extension of ARS pServer Based on IPFS
+
+基于IPFS的应用先河私有云扩展应用   
 
 ### 环境配置
 
-##### 1.源码下载
+##### 1.Download and install 源码下载
 
 ```
 $ go get github.com/arsyun/arsDrive
 ```
 
-##### 2.依赖安装
+##### 2.Dependencies   依赖安装   
 
 ```
 $ go get github.com/labstack/echo/... 
@@ -20,11 +22,11 @@ $ go get github.com/labstack/echo/...
 
 因为golang.org 在国内无法访问，会导致package golang.org/x/crypto 安装失败
 
-需要访问访问<https://github.com/golang/crypto>下载该组件 然后放到$(GOROOT)/src/golang.org/x/crypto
+需要访问访问[https://github.com/golang/crypto](https://github.com/golang/crypto)下载该组件 然后放到$(GOROOT)/src/golang.org/x/crypto
 
-以后再碰到无法安装golang.org/x/...之类的错误，只需要到https://github.com/golang/...去下载，放到${GOROOT}/src/golang.org /x/...目录下 
+以后再碰到无法安装golang.org/x/...之类的错误，只需要到[https://github.com/golang/...](https://github.com/golang/)去下载，放到${GOROOT}/src/golang.org /x/...目录下 
 
-##### 3.运行环境
+##### 3.Runtime environment  运行环境
 
 arsDrive需要连接一个IPFS节点，IPFS节点需要设置访问控制，参考如下
 
