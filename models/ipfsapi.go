@@ -5,9 +5,8 @@ import (
 	"net/http"
 )
 
-const Host string = "http://192.168.2.56:5001";
 type Api struct {
-
+	host string
 }
 
 func (a *Api)httpGet(url string) []byte{
@@ -23,14 +22,14 @@ func (a *Api)httpGet(url string) []byte{
 	return body
 }
 func (a *Api)ObjectGet (hash string)[]byte{
-	url := Host+"/api/v0/object/get?arg="+hash
+	url := a.host+"/api/v0/object/get?arg="+hash
 	return a.httpGet(url)
 }
 func (a *Api)ObjectRm(root string,name string)[]byte{
-	url := Host+"/api/v0/object/patch/rm-link?arg="+root+"&arg="+name
+	url := a.host+"/api/v0/object/patch/rm-link?arg="+root+"&arg="+name
 	return a.httpGet(url)
 }
 func (a *Api)ObjectAdd(root string,name string,hash string)[]byte{
-	url := Host+"/api/v0/object/patch/add-link?arg="+root+"&arg="+name+"&arg="+hash
+	url := a.host+"/api/v0/object/patch/add-link?arg="+root+"&arg="+name+"&arg="+hash
 	return a.httpGet(url)
 }

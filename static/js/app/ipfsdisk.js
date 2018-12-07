@@ -193,14 +193,14 @@ function htmlview(data){
         var index = value.Name.lastIndexOf(".");
         if( index > 0){
             var postf = value.Name.substring(index+1);
-            var str = '<div data-hash="'+value.Hash+'" data-path="'+ value.Name +'" class="file  file-box menu-folder"  data-size="0">'+
+            var str = '<div data-hash="'+value.Hash+'" data-path="'+ value.Name +'" class="file  file-box menu-folder"  data-size="'+value.size+'">'+
                         '<div class="item-select"><div class="item-check"></div></div>'+
                         //'<div class="item-menu"><div class="cert"></div></div>'+
                         '<div class="ico open-file" filetype="'+ postf +'"><i class="x-item-file x-'+ postf +'"></i></div>'+
                         '<div class="filename"><span class="title db-click-rename" title="双击名称重命名">'+value.Name +'</span></div></div>';
             file_list.push(str);
         }else{
-            var str = '<div data-hash="'+value.Hash+'" data-path="'+value.Name+'" class="file  folder-box menu-folder"  data-size="0">'+
+            var str = '<div data-hash="'+value.Hash+'" data-path="'+value.Name+'" class="file  folder-box menu-folder"  data-size="'+value.size+'">'+
                         '<div class="item-select"><div class="item-check"></div></div>'+
                        // '<div class="item-menu"><div class="cert"></div></div>'+
                         '<div class="ico open-folder" filetype="folder"><i class="x-item-file x-folder"></i></div>'	+
