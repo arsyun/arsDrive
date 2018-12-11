@@ -57,7 +57,7 @@ function bindinit(){
         var func = $(this).attr("data-action");
         switch(func){
             case "upload":
-                $('#addFileModal').modal();
+                $("#fileToUpload").trigger("click");
                 break;
             case "newfolder":
                 $("#newfolder").removeClass('hide');
@@ -67,7 +67,11 @@ function bindinit(){
                 IPFS.paste();
                 $("#btn-paste").addClass('hide');
                 break;
-        }
+        };
+        $(".toolbar-menu").removeClass("open");
+    });
+    $("#upload_cancel").on("click",null,function(){
+        FileUpload.cancel();
     });
     $(".file-list-list").on("click","#confirm",function(){
         var name = $("#newfoldername").val();
@@ -131,6 +135,66 @@ function logout(){
         }
     }); 
 }
+function startUpload(){
+    FileUpload.start();
+}
+
+var FileUpload = (function(){
+    var _stop = false;
+    var xhr;
+    var _init = function(){
+        var file = $("#fileToUpload")[0].files[0];
+        if(!file)return;
+        $(".upload-info p").text(bytesToSize(file.size)+"--"+file.name).attr("title",file.name);
+        var fd = new FormData();
+        fd.append("file",file);
+        $("#fileToUpload").val("");
+        $('#upload-display').removeClass("hide");
+        xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", _uploadProgress, false);
+        xhr.addEventListener("load", _uploadComplete, false);
+        xhr.addEventListener("error", _uploadFailed, false);
+        xhr.open("POST", "/api/v0/add");//修改成自己的接口
+        xhr.send(fd);
+    };
+    var _uploadProgress = function(evt){
+        if (evt.lengthComputable) {
+            var percentComplete = Math.round(evt.loaded * 100 / evt.total).toString()+"%";
+            $("#upload_progress").width(percentComplete);
+            $("#upload_progress div").html(percentComplete);
+        }
+        else {
+            $("#upload_progress div").html('unable to compute');
+        }
+    };
+    var _uploadComplete = function(evt){
+        try {
+            var res = JSON.parse(evt.target.response);
+            if(res.Hash!=='' && res.Name!==''){
+                IPFS.addfile(res.Name,res.Hash);
+                $('#upload-display').addClass("hide");
+            }
+        }catch (e) {
+
+        }
+        
+    };
+    var _uploadFailed = function(evt){
+        
+    };
+    var pauseUpload = function(){
+        _stop = !_stop;
+    };
+    var cancel = function(){
+        xhr.abort();
+        $('#upload-display').addClass('hide');
+    };
+    return{
+        start:_init,
+        pause:pauseUpload,
+        cancel:cancel
+    };
+})();
 
 function gotoPath(path){
     curPath = path===''?'':path+'/';
@@ -161,7 +225,7 @@ function htmlview(data){
     });
     var html = '<div id="newfolder" class="file undefined folder-box menu-folder hide" title="" data-size="0">'+
                         '<div class="ico" filetype="folder"><i class="x-item-file x-folder small"></i></div>'+
-                        '<div class="filename" style="height:3rem;padding-top:0.8rem;width:inherit;"><input class="fix" id="newfoldername" value=""/><a id="confirm">确定</a><a id="cancel">取消</a></div></div>';
+                        '<div class="filename" style="height:3rem;padding-top:0.8rem;width:80%;"><input class="fix" id="newfoldername" value=""/><a id="confirm">确定</a><a id="cancel">取消</a></div></div>';
     
     folder_list.forEach(function(value){
         html = html + value;

@@ -309,7 +309,8 @@ var FileUpload = (function(){
         if(!file)return;
         $(".upload-info p").text(bytesToSize(file.size)+"--"+file.name).attr("title",file.name);
         var fd = new FormData();
-        fd.append("fileToUpload",file);
+        fd.append("file",file);
+        $("#fileToUpload").val("");
         $('#uploadFileModal').modal({backdrop: 'static', keyboard: false});
         xhr = new XMLHttpRequest();
         xhr.upload.addEventListener("progress", _uploadProgress, false);

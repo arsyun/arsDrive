@@ -60,7 +60,7 @@ a.button:focus { outline: none;}
 .file-list-list .file .filename{
 	text-overflow:ellipsis;overflow: hidden;
 	color: #444;font-size: 14px;padding-top: 10px;
-		white-space: nowrap;padding-right: 90px;
+		white-space: nowrap;
 }
 .file-list-list .file .filetime{margin-top: -9px;color:#bbb;}
 .file-list-list .file .filesize{float: right;width: auto;margin-right:50px;padding-left: 0;margin-top: -17px;}
