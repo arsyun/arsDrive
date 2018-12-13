@@ -1,11 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"arsDrive/controllers"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"html/template"
-	"arsDrive/controllers"
 	"io"
 	"net/http"
 )
@@ -31,7 +30,6 @@ func customHTTPErrorHandler(err error, c echo.Context) {
 		code = he.Code
 		msg = he.Error()
 	}
-	fmt.Println(msg)
 	c.Render(code, "error.html",map[string]interface{}{
 		"message": msg,
 	})

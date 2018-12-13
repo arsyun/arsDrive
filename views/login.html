@@ -23,12 +23,12 @@
                 <div class="inputs">
                     <div>
                         <i class="font-icon icon-user"></i>
-                        <input id="username" type="text" placeholder="登录账号" required autocomplete="on" />
+                        <input id="username" type="text" placeholder="Username" required autocomplete="on" />
                     </div>
                 </div>
                 <div class="actions">
                     <br/>
-                    <input type="submit" id="submit" value="登录" />
+                    <input type="submit" id="submit" value="login" />
                 </div>
                 <div class="msg"></div>
             </div>
@@ -46,7 +46,7 @@
                         if(result.success >= 0){
                             location.reload();
                         }else{
-                            $(".msg").html("登录失败");
+                            $(".msg").html("Logon failure");
                         }
                     }
                 }); 

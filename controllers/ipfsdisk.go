@@ -47,7 +47,6 @@ func init(){
 	Setting = configuration{}
 	err := decoder.Decode(&Setting)
 	if err != nil {
-
 		Setting.Httpserver = ":88"
 		Setting.Ipfs_api = "127.0.0.1:5001"
 		Setting.Ipfs_gateway = "127.0.0.1:8080"
@@ -283,6 +282,6 @@ func getuser(c echo.Context)(string){
 func setuser(c echo.Context,user string){
 	data := []byte(user)
 	hash := fmt.Sprintf("%x", md5.Sum(data))
-	cookie := http.Cookie{Name: "user", Value: hash, Path: "/", HttpOnly: true, MaxAge: 3600}
+	cookie := http.Cookie{Name: "user", Value: hash, Path: "/", HttpOnly: true, MaxAge: 3600*12}
 	http.SetCookie(c.Response(), &cookie)
 }
