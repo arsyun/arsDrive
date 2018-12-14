@@ -61,10 +61,16 @@ function bindinit(){
         if(ss.length > 0 && !sel){
             $(".select-button-show").removeClass('hidden');
             ss.addClass("select");
-            if($(".file.select").length===1 && $(".file.select").first().hasClass("file-box")){
-                $("#download-btn").removeClass("disabled");
+            if($(".file.select").length===1){
+                if($(".file.select").first().hasClass("file-box")){
+                    $("#download-btn").removeClass("disabled");
+                }else{
+                    $("#download-btn").addClass("disabled");
+                }
+                $("#share-btn").removeClass("disabled");
             }else{
                 $("#download-btn").addClass("disabled");
+                $("#share-btn").addClass("disabled");
             }
         }else{
             $(".select-button-show").addClass('hidden');
@@ -117,9 +123,8 @@ function bindinit(){
                 $("#downl").children("span").first().click();
                 break;
             case "upload":
-               // $('#uploadFileModal').modal();break;
                 $("#fileToUpload").trigger("click");
-                break;                
+                break;
         }
         
     });
@@ -127,11 +132,11 @@ function bindinit(){
         var add_name = $("#add_name").val().replace(/\s*/g, '');
         var add_hash = $("#add_hash").val().replace(/\s*/g, '');
         if(add_name === ""){
-            $("#name_err").text("名称不能为空");
+            $("#name_err").text("Name is empty");
         }
-        var reg = new RegExp('^[A-Za-z0-9]{46}$');//文件夹是不能包含   \/:*?"<>|    这几个符号
+        var reg = new RegExp('^[A-Za-z0-9]{46}$');
         if(!reg.test(add_hash)){
-            $("#hash_err").text("错误的哈希值");
+            $("#hash_err").text("Hash is not in the right format");
             return;
         }
         
@@ -150,6 +155,15 @@ function bindinit(){
     });
     $("#logout-btn").on("click",null,function(){
         logout();
+    });
+    var clipboard = new ClipboardJS('#share-btn', {
+        text: function() {
+            var t = $('.file.select').first()
+            return self.location.href+'ipfs/'+t.attr("data-hash")+"?"+t.attr("data-path")
+        }
+    });
+    clipboard.on('success', function(e) {
+        Tips.close({code:true,data:'Copied share-link to Clipboard'});
     });
 }
 function gotoPath(path){
@@ -197,14 +211,14 @@ function htmlview(data){
                         '<div class="item-select"><div class="item-check"></div></div>'+
                         //'<div class="item-menu"><div class="cert"></div></div>'+
                         '<div class="ico open-file" filetype="'+ postf +'"><i class="x-item-file x-'+ postf +'"></i></div>'+
-                        '<div class="filename"><span class="title db-click-rename" title="双击名称重命名">'+value.Name +'</span></div></div>';
+                        '<div class="filename"><span class="title db-click-rename" title="">'+value.Name +'</span></div></div>';
             file_list.push(str);
         }else{
             var str = '<div data-hash="'+value.Hash+'" data-path="'+value.Name+'" class="file  folder-box menu-folder"  data-size="'+value.size+'">'+
                         '<div class="item-select"><div class="item-check"></div></div>'+
                        // '<div class="item-menu"><div class="cert"></div></div>'+
                         '<div class="ico open-folder" filetype="folder"><i class="x-item-file x-folder"></i></div>'	+
-                        '<div class="filename"><span class="title db-click-rename" title="双击名称重命名">'+value.Name +'</span></div></div>';
+                        '<div class="filename"><span class="title db-click-rename" title="">'+value.Name +'</span></div></div>';
             folder_list.push(str);
         }
     });
@@ -345,7 +359,7 @@ var FileUpload = (function(){
         
     };
     var pauseUpload = function(){
-        _stop = !_stop;
+        _stop = !_stop;  //can't pause
     };
     var cancel = function(){
         xhr.abort();
@@ -484,9 +498,6 @@ var Tips =  (function(){
 				code=msg.code;msg = msg.data;
 				if(code && typeof(msg) != 'string'){
 					msg = "Success!";
-					if(window.LNG && LNG.success){
-						msg = LNG['success'];
-					}					
 				}
 			}catch(e){
 				code=0;msg ='';
@@ -596,7 +607,7 @@ var IPFS = (function (){
         if(folder==='')return;
         var reg = new RegExp('^[^\\\\\\/:*?\\"<>|]+$');//文件夹是不能包含   \/:*?"<>|    这几个符号
         if(!reg.test(folder)){
-            Tips.close({code:false,data:'文件夹名格式不正确'});
+            Tips.close({code:false,data:'Folder name is not in the right format'});
             return;
         }
         var data = {name:folder,path:curPath};

@@ -86,15 +86,21 @@ function bindinit(){
     $("#logout_btn").on("click",null,function(){
         logout();
     });
+    var clipboard = new ClipboardJS('.share-btn', {
+        text: function(a) {
+            var t = ($(a).parent()).parent();
+            return self.location.href+'ipfs/'+t.attr("data-hash")+"?"+t.attr("data-path")
+        }
+    });
 }
 function shownFileMenu(isFile){  
-    var dl = isFile?'<div class="action-menu" data-action="action-download"><span class="content"><i class="font-icon icon-cloud-download"></i>下载</span></div>':'';
+    var dl = isFile?'<div class="action-menu" data-action="action-download"><span class="content"><i class="font-icon icon-cloud-download"></i>Download</span></div>':'';
     return  '<div class="file-action-menu" style="display:none;">'+
-                    '<div class="action-menu" data-action="action-copy"><span class="content"><i class="font-icon icon-copy"></i>复制</span></div>'+
-                    '<div class="action-menu" data-action="action-cut"><span class="content"><i class="font-icon icon-cut"></i>剪切</span></div>'+
-                    '<div class="action-menu" data-action="action-share"><span class="content"><i class="font-icon icon-share"></i>分享</span></div>'+
+                    '<div class="action-menu" data-action="action-copy"><span class="content"><i class="font-icon icon-copy"></i>Copy</span></div>'+
+                    '<div class="action-menu" data-action="action-cut"><span class="content"><i class="font-icon icon-cut"></i>Cut</span></div>'+
+                    '<div class="action-menu share-btn" data-action="action-share"><span class="content"><i class="font-icon icon-share"></i>Share</span></div>'+
                    // '<div class="action-menu" data-action="action-rname"><span class="content"><i class="font-icon icon-pencil"></i>重命名</span></div>'+                    
-                    '<div class="action-menu" data-action="action-remove"><span class="content"><i class="font-icon icon-trash"></i>删除</span></div>'+dl+
+                    '<div class="action-menu" data-action="action-remove"><span class="content"><i class="font-icon icon-trash"></i>Remove</span></div>'+dl+
                     '<div class="menu-close"><span class="content" style="margin:20px;"><i class="font-icon icon-ellipsis-horizontal"></i></span></div>'+
                     '<div style="clear:both"></div></div>';
 }
@@ -272,6 +278,12 @@ function fileAction(func,name,hash){
             IPFS.removeFile({path:curPath,files:[name]});
             break;
         case "action-download":
+            IPFS.getUserRoot(function (root) {
+                var url = "/ipfs/"+root+'/'+curPath+name;
+                $("#downl").attr('href',url);
+                $("#downl").attr('download',name);
+                $("#downl").children("span").first().click();
+            });
             break;
     }
 }
@@ -319,7 +331,7 @@ var Tips =  (function(){
 		}
 		var self = $(tipsID),theType;
 		switch(code){//  success/warning/info/error
-			case 100:delay = 2000;//加长时间 5s
+			case 100:delay = 2000;//加长时间 2s
 			case true:
 			case undefined:
 			case 'success':theType = 'success';break;
@@ -397,9 +409,6 @@ var Tips =  (function(){
 				code=msg.code;msg = msg.data;
 				if(code && typeof(msg) != 'string'){
 					msg = "Success!";
-					if(window.LNG && LNG.success){
-						msg = LNG['success'];
-					}					
 				}
 			}catch(e){
 				code=0;msg ='';
@@ -411,12 +420,6 @@ var Tips =  (function(){
 				self.remove();
 			});
 		},delay);
-		// $(self).stop(true,true)
-		// 	.show()
-		// 	.delay(delay)
-		// 	.animate({opacity:0,top:- self.height()},inTime,'linear',function(){
-		// 		self.remove();
-		// 	});
 	};
 	return{
 		tips:tips,
@@ -503,7 +506,7 @@ var IPFS = (function (){
         if(folder==='')return;
         var reg = new RegExp('^[^\\\\\\/:*?\\"<>|]+$');//文件夹是不能包含   \/:*?"<>|    这几个符号
         if(!reg.test(folder)){
-            Tips.close({code:false,data:'文件夹名格式不正确'});
+            Tips.close({code:false,data:'Folder name is not in the right format'});
             return;
         }
         var data = {name:folder,path:curPath,user_id:uid};

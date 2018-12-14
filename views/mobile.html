@@ -9,9 +9,10 @@
     <!--[if IE 7]>
     <link rel="stylesheet" href="./static/style/font-awesome/css/font-awesome-ie7.css">
     <![endif]--> 
-    <title>先河网盘</title>
+    <title>{{index . "title"}}</title>
     <link href="./static/style/wap/app_explorer.css" rel="stylesheet">
     <script type="text/javascript" src="./static/js/lib/jquery.min.js"></script>
+    <script type="text/javascript" src="./static/js/lib/clipboard.min.js"></script>
     <script type="text/javascript" src="./static/js/app/wapipfsdisk.js"></script>    
     <style type="text/css">
         #confirm,#cancel {
@@ -37,7 +38,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" id="upload_cancel" class="btn btn-default">取消</button>
+                    <button type="button" id="upload_cancel" class="btn btn-default">Cancel</button>
                 </div>
             </div>
         </div> 
@@ -46,18 +47,19 @@
     <div class="frame-main">
         <div class="address" style="display:flex">
                     <ul id="yarnball" style="width:90%"></ul>
-                    <span id="logout_btn" style="width:10%;margin: 0.3em 0.5em">注销</span>
+                    <span id="logout_btn" style="width:10%;margin: 0.3em 0.5em">Logout</span>
             </div>
         <div class="bodymain">			
             <div class="file-list-list"></div>
         </div>
+        <a id="downl" class="disable" ><span >&nbsp</span></a>
     </div>
     <div class="toolbar-menu">
             <button class="menu-plus tool" id="openmenu" data-toggle="dropdown"></button>
             <ul class="dropdown-menu tool-menu-right pull-right animated menuShow" role="menu">
-                <li data-action="upload"><a draggable="false"><i class="font-icon icon-cloud-upload"></i>上传</a></li>
-                <li data-action="newfolder"><a draggable="false"><i class="font-icon icon-folder-close-alt"></i>新建文件夹</a></li>
-                <li data-action="paste" id="btn-paste" class="hide"><a draggable="false"><i class="font-icon icon-paste"></i>粘贴</a></li>
+                <li data-action="upload"><a draggable="false"><i class="font-icon icon-cloud-upload"></i>Upload</a></li>
+                <li data-action="newfolder"><a draggable="false"><i class="font-icon icon-folder-close-alt"></i>NewFolder</a></li>
+                <li data-action="paste" id="btn-paste" class="hide"><a draggable="false"><i class="font-icon icon-paste"></i>Paste</a></li>
             </ul>
     </div>
 </body>
