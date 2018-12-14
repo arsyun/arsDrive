@@ -73,7 +73,7 @@ If The IP of  IPFS node is 192.168.1.25  .so you can set the configuration file 
 If IPFS and arsDrive running in one Host，the connent config and access control should be “127.0.0.1”
 
 ```
-$ ipfs config Addresses.Gateway /ip4/0.0.0.0/tcp/8080
+$ ipfs config Addresses.Gateway /ip4/127.0.0.1/tcp/8080
 $ ipfs config Addresses.API /ip4/127.0.0.1/tcp/5001
 ...
 # ./config/conf.json

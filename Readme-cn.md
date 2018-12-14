@@ -73,7 +73,7 @@ $ ipfs config Addresses.API /ip4/0.0.0.0/tcp/5001
 假如IPFS节点和arsDrive运行在同一太主机，访问控制和配置应该把地址设为“127.0.0.1”
 
 ```
-$ ipfs config Addresses.Gateway /ip4/0.0.0.0/tcp/8080
+$ ipfs config Addresses.Gateway /ip4/127.0.0.1/tcp/8080
 $ ipfs config Addresses.API /ip4/127.0.0.1/tcp/5001
 ...
 # ./config/conf.json
