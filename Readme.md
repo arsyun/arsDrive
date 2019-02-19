@@ -6,7 +6,7 @@ An Extension of ARS pServer Based on IPFS
 
 arsDrive is designed as an extension of ARS pServer .   Now the source code  open and modify as a website project ，So the Access control is simple——using only an Username。 
 
-demo http://arsdrive.ipfs-storage.tech/
+demo http://185.239.68.188/
 
 ### Usage
 
